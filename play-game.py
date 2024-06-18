@@ -26,16 +26,17 @@ class NumberGuessingGame:
 
     # Create a function to provide hints to the user after crossing half of the attempts of the range
     # Hints should be like "You are halfway there" or "You are close"
-    # Also, share a range of numbers where the number lies (plus or minus 1)
+    # Print a range of numbers where the number lies (plus or minus 2) if the attempt is equal to half way 
+    # Print a range of numbers where the number lies (plus or minus 1) if the attempt is more than half way and user is close to the number 
     def provide_hint(self):
         total_range = self.upper_limit - self.lower_limit + 1
-        halfway_point = total_range // 2
-        if len(self.attempts) == halfway_point:
-            print("Hint: You are halfway there.")
-            print(f"The number is between {self.random_number - 2} and {self.random_number + 2}.")
-        elif len(self.attempts) > halfway_point:
-            print("Hint: You are close.")
-            print(f"The number is between {self.random_number - 1} and {self.random_number + 1}.")
+        halfway = total_range // 2
+        if len(self.attempts) == halfway:
+            print("You are halfway there.")
+            print(f"The number lies between {self.random_number - 2} and {self.random_number}.")
+        elif len(self.attempts) > halfway and len(self.attempts) < total_range:
+            print("You are close.")
+            print(f"The number lies between {self.random_number - 1} and {self.random_number}.")
 
     # Prompt the user to guess the number
     # Ensure that the user input is a valid numeric input
@@ -49,11 +50,14 @@ class NumberGuessingGame:
                 print("Invalid input. Please enter a valid number.")
 
     # Provide feedback for each guess, indicating if the guess is too high, too low, or correct
+    # If the guess is too high, return "Too high. Try again."
+    # If the guess is too low, return "Too low. Try again."
+    # If the guess is correct, return "Correct"
     def provide_feedback_for_guess(self, user_guess):
-        if user_guess < self.random_number:
-            return "Too low. Try again."
-        elif user_guess > self.random_number:
+        if user_guess > self.random_number:
             return "Too high. Try again."
+        elif user_guess < self.random_number:
+            return "Too low. Try again."
         else:
             return "Correct"
 
@@ -97,11 +101,11 @@ class NumberGuessingGame:
             while True:
                 user_guess = self.prompt_user_for_guess()
                 if user_guess > self.upper_limit or user_guess < self.lower_limit:
-                    print("Please guess inside the range.")
+                    print(f"Please enter a number within the range of {self.lower_limit} and {self.upper_limit}.")
                     continue
                 self.attempts.append(user_guess)
                 feedback = self.provide_feedback_for_guess(user_guess)
-                print(feedback)
+                print(f"Feedback: {feedback}")
                 if user_guess == self.random_number:
                     score = self.calculate_score()
                     self.scores.append(score)
@@ -128,7 +132,7 @@ class NumberGuessingGame:
 
                 self.provide_hint()
 
-# Create a NumberGuessingGame object
 game = NumberGuessingGame()
-# Call the play_game function to start the game
 game.play_game()
+
+
